@@ -7,12 +7,12 @@ NC='\033[0m' # No Color
 
 # Test function
 run_test() {
-    if eval "$1"; then
-        echo -e "${GREEN}[PASS]${NC} $2"
-    else
-        echo -e "${RED}[FAIL]${NC} $2"
-        exit 1
-    fi
+  if eval "$1"; then
+    echo -e "${GREEN}[PASS]${NC} $2"
+  else
+    echo -e "${RED}[FAIL]${NC} $2"
+    exit 1
+  fi
 }
 
 # Setup
@@ -21,17 +21,18 @@ TEST_DIR="$(mktemp -d)"
 cp bin/encrypt.sh bin/decrypt.sh bin/verify_integrity.sh "$TEST_DIR/"
 cd "$TEST_DIR"
 mkdir vault
-echo "Test content 1" > vault/test1.md
-echo "Test content 2" > vault/test2.txt
-echo '{"key": "value"}' > vault/data.json
-echo "<root>XML Data</root>" > vault/data.xml
+echo "Test content 1" >vault/test1.md
+echo "Test content 2" >vault/test2.txt
+echo '{"key": "value"}' >vault/data.json
+echo "<root>XML Data</root>" >vault/data.xml
 
 # Use a fixed passphrase for testing
 TEST_PASSPHRASE="testpassword123"
 
 # Test encryption
 echo "Testing encryption..."
-ENCRYPTION_OUTPUT=$(./encrypt.sh <<EOF
+ENCRYPTION_OUTPUT=$(
+  ./encrypt.sh <<EOF
 $TEST_PASSPHRASE
 EOF
 )
@@ -57,7 +58,7 @@ run_test "diff -r vault vault_original" "Decrypted contents match original"
 
 # Test modification detection
 echo "Testing modification detection..."
-echo "Modified content" > vault/test1.md
+echo "Modified content" >vault/test1.md
 VERIFY_OUTPUT=$(echo "$TEST_PASSPHRASE" | ./verify_integrity.sh)
 echo "$VERIFY_OUTPUT"
 run_test "echo \"$VERIFY_OUTPUT\" | grep -q 'Integrity check failed'" "Integrity verification fails for modified vault"
@@ -80,4 +81,3 @@ cd ..
 rm -rf "$TEST_DIR"
 
 echo "All tests completed successfully!"
-
