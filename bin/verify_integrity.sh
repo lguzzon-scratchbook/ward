@@ -2,8 +2,8 @@
 
 # Check if the vault directory and encrypted file exist
 if [ ! -d "./vault" ] || [ ! -f "vault.tar.gz.gpg" ]; then
-    echo "Error: vault directory or encrypted file not found."
-    exit 1
+  echo "Error: vault directory or encrypted file not found."
+  exit 1
 fi
 
 # Generate current checksum of the vault directory
@@ -21,10 +21,9 @@ echo "Stored checksum: $STORED_CHECKSUM"
 
 # Compare checksums
 if [ "$CURRENT_CHECKSUM" = "$STORED_CHECKSUM" ]; then
-    echo "Integrity check passed: The vault directory matches the encrypted state."
-    exit 0
+  echo "Integrity check passed: The vault directory matches the encrypted state."
+  exit 0
 else
-    echo "Integrity check failed: The vault directory has been modified since the last encryption."
-    exit 1
+  echo "Integrity check failed: The vault directory has been modified since the last encryption."
+  exit 1
 fi
-
